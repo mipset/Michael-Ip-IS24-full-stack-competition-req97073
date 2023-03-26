@@ -1,0 +1,53 @@
+<h2 mat-dialog-title>Add Product</h2>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="newProductForm">
+    <mat-form-field class="full-field">
+      <mat-label>Product Name</mat-label>
+      <input matInput type="text" required formControlName="productName" (keyup)="checkValidText($event)">
+    </mat-form-field>
+    <br>
+    <mat-form-field class="half-field">
+      <mat-label>Product Owner</mat-label>
+      <input matInput type="text" required formControlName="productOwner">
+    </mat-form-field>
+
+    <mat-form-field class="half-field">
+      <mat-label>Scrum Master</mat-label>
+      <input matInput type="text" required formControlName="scrumMaster">
+    </mat-form-field>
+    <br>
+    <mat-form-field class="half-field">
+      <mat-label>Start Date</mat-label>
+      <input matInput [matDatepicker]="picker" required formControlName="startDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+
+    </mat-form-field>
+
+    <mat-form-field class="half-field">
+      <mat-label>Methodology</mat-label>
+      <mat-select formControlName="methodology">
+        <mat-option value="Agile">Agile</mat-option>
+        <mat-option value="Waterfall">Waterfall</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br>
+    <ng-container formArrayName="developers" required>
+      <button mat-raised-button type="button" class="add-btn" (click)="addDeveloper()">Add Developers <mat-icon>add</mat-icon></button>
+      <ng-container *ngFor="let developerForm of developers.controls; let i = index">
+        <div [formGroupName]="i">
+          <mat-form-field class="half-field">
+            <mat-label>Developer Name</mat-label>
+            <input matInput type="text" required formArrayName="developers">
+          </mat-form-field>
+        </div>
+      </ng-container>
+    </ng-container>
+
+  </form>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button [mat-dialog-close]="false">Cancel</button>
+  <button mat-raised-button cdkFocusInitial (click)="addProduct()">Save</button>
+</mat-dialog-actions>

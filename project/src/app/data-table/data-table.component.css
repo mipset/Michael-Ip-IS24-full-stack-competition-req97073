@@ -1,0 +1,22 @@
+.table-container {
+  margin: auto;
+  padding: 75px 175px 75px 175px;
+}
+
+tr.mapping-row:hover {
+  background: gray;
+}
+
+td,
+th {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+.mat-sort-header-container {
+  justify-content: center !important;
+}
+
+.tool-bar-styling{
+  background: blue;
+}
