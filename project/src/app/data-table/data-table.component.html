@@ -1,81 +1,152 @@
 <div class="table-container">
   <mat-toolbar color="accent">
-    <div>Total Products: {{productLength}}</div>
+    <div>Total Products: {{ productLength }}</div>
   </mat-toolbar>
 
-  <br>
+  <br />
 
   <form [formGroup]="filterOptionsForm">
     <mat-form-field>
-      <input type="text" matInput formControlName="scrumMasterFilter" [matAutocomplete]="scrum">
+      <input
+        type="text"
+        matInput
+        formControlName="scrumMasterFilter"
+        (keyup)="filterTable($event)"
+        [matAutocomplete]="scrum"
+      />
       <mat-hint>Filter Scrum Masters</mat-hint>
-      <mat-autocomplete #scrum="matAutocomplete" (optionSelected)="filterTable($event);"
-        hideSingleSelectionIndicator="true">
-        <mat-option *ngFor="let option of filteredListForScrumMaster  | async" [value]="option">
-          {{option}}
+      <mat-autocomplete
+        #scrum="matAutocomplete"
+        (optionSelected)="filterTable($event)"
+        hideSingleSelectionIndicator="true"
+      >
+        <mat-option
+          *ngFor="let option of filteredListForScrumMaster | async"
+          [value]="option"
+        >
+          {{ option }}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
 
     <mat-form-field style="margin-left: 2rem">
-      <input type="text" matInput formControlName="developerFilter" [matAutocomplete]="develop">
+      <input
+        type="text"
+        matInput
+        formControlName="developerFilter"
+        (keyup)="filterTable($event)"
+        [matAutocomplete]="develop"
+      />
       <mat-hint>Filter Developers</mat-hint>
-      <mat-autocomplete #develop="matAutocomplete" (optionSelected)="filterTable($event);"
-        hideSingleSelectionIndicator="true">
-        <mat-option *ngFor="let option of filteredListForDevelopers  | async" [value]="option">
-          {{option}}
+      <mat-autocomplete
+        #develop="matAutocomplete"
+        (optionSelected)="filterTable($event)"
+        hideSingleSelectionIndicator="true"
+      >
+        <mat-option
+          *ngFor="let option of filteredListForDevelopers | async"
+          [value]="option"
+        >
+          {{ option }}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
 
-    <button style="margin-left: 2rem" mat-raised-button (click)="resetFilters()">Reset Filters</button>
-    <button style="margin-left: 2rem" mat-raised-button (click)="addProduct()">Add Product</button>
-
+    <button
+      style="margin-left: 2rem"
+      mat-raised-button
+      (click)="resetFilters()"
+    >
+      Reset Filters
+    </button>
+    <button style="margin-left: 2rem" mat-raised-button (click)="addProduct()">
+      Add Product
+    </button>
   </form>
 
+  <br />
 
-
-  <br>
-
-  <table mat-table [dataSource]="tableData" class="mat-elevation-z24">
+  <table
+    mat-table
+    [dataSource]="tableData"
+    class="mat-elevation-z24"
+    multiTemplateDataRows
+  >
     <ng-container matColumnDef="productId">
       <th mat-header-cell *matHeaderCellDef>Product Number</th>
-      <td mat-cell *matCellDef="let element">{{element.productId}}</td>
+      <td mat-cell *matCellDef="let product">{{ product.productId }}</td>
     </ng-container>
 
     <ng-container matColumnDef="productName">
       <th mat-header-cell *matHeaderCellDef>Product Name</th>
-      <td mat-cell *matCellDef="let element">{{element.productName}}</td>
+      <td mat-cell *matCellDef="let product">{{ product.productName }}</td>
     </ng-container>
 
     <ng-container matColumnDef="productOwnerName">
       <th mat-header-cell *matHeaderCellDef>Product Owner</th>
-      <td mat-cell *matCellDef="let element">{{element.productOwnerName}}</td>
+      <td mat-cell *matCellDef="let product">{{ product.productOwnerName }}</td>
     </ng-container>
 
     <ng-container matColumnDef="developers">
       <th mat-header-cell *matHeaderCellDef>Developers</th>
-      <td mat-cell *matCellDef="let element">{{element.developers}}</td>
+      <td mat-cell *matCellDef="let product">{{ product.developers }}</td>
     </ng-container>
 
     <ng-container matColumnDef="scrumMasterName">
       <th mat-header-cell *matHeaderCellDef>Scrum Master</th>
-      <td mat-cell *matCellDef="let element">{{element.scrumMasterName}}</td>
+      <td mat-cell *matCellDef="let product">{{ product.scrumMasterName }}</td>
     </ng-container>
 
     <ng-container matColumnDef="startDate">
       <th mat-header-cell *matHeaderCellDef>Start Date</th>
-      <td mat-cell *matCellDef="let element">{{element.startDate}}</td>
+      <td mat-cell *matCellDef="let product">{{ product.startDate }}</td>
     </ng-container>
 
     <ng-container matColumnDef="methodology">
       <th mat-header-cell *matHeaderCellDef>Methodology</th>
-      <td mat-cell *matCellDef="let element">{{element.methodology}}</td>
+      <td mat-cell *matCellDef="let product">{{ product.methodology }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let product; let i = index">
+        <button
+          mat-icon-button
+          (click)="product.isExpanded = !product.isExpanded; editProduct(i)"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button (click)="deleteProduct(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+    <ng-container matColumnDef="expandedDetail">
+      <td
+        mat-cell
+        *matCellDef="let product"
+        [attr.colspan]="displayedColumns.length"
+      >
+        <div
+          class="example-element-detail"
+          [@detailExpand]="
+            product == product.isExpanded ? 'expanded' : 'collapsed'
+          "
+        >
+          <p>Test</p>
+        </div>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="mapping-row"></tr>
-
+    <tr
+      mat-row
+      *matRowDef="let product; columns: displayedColumns"
+       [class.example-expanded-row]="product.isExpanded"
+    ></tr>
+    <tr mat-row *matRowDef="let product; columns: ['expandedDetail']" ></tr>
   </table>
   <mat-paginator [pageSizeOptions]="[15, 30, 45]" showFirstLastButtons>
   </mat-paginator>

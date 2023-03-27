@@ -32,13 +32,13 @@
       </mat-select>
     </mat-form-field>
     <br>
-    <ng-container formArrayName="developers" required>
+    <ng-container formArrayName="developers">
       <button mat-raised-button type="button" class="add-btn" (click)="addDeveloper()">Add Developers <mat-icon>add</mat-icon></button>
       <ng-container *ngFor="let developerForm of developers.controls; let i = index">
         <div [formGroupName]="i">
           <mat-form-field class="half-field">
             <mat-label>Developer Name</mat-label>
-            <input matInput type="text" required formArrayName="developers">
+            <input matInput type="text" required formControlName="developers">
           </mat-form-field>
         </div>
       </ng-container>

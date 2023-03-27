@@ -41,7 +41,7 @@ export class AddProductPopupComponent {
       return;
     }
     const newDeveloper = this.fb.group({
-      developers: ['', Validators.required]
+      developers: ['']
     });
     this.developers.push(newDeveloper);
   }
@@ -58,7 +58,17 @@ export class AddProductPopupComponent {
     }
     else {
       console.log(this.newProductForm);
-      this.dialogRef.close();
+      let newProduct = {
+        productId: "",
+        productName: this.newProductForm.value.productName,
+        productOwnerName: this.newProductForm.value.productOwner,
+        developers: this.newProductForm.value.developers,
+        scrumMasterName: this.newProductForm.value.scrumMaster,
+        startDate: this.newProductForm.value.startDate,
+        methodology: this.newProductForm.value.methodology
+      }
+      console.log(newProduct)
+      this.dialogRef.close(newProduct);
     }
   }
 }
