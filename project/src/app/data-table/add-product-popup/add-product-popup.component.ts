@@ -46,23 +46,27 @@ export class AddProductPopupComponent {
     this.developers.push(newDeveloper);
   }
   checkValidText(x: any) {
-    console.log(x);
     if (!/^[a-zA-Z ]*$/.test(x.target.value)) {
       console.log("Letters Only Please");
     }
   }
 
   addProduct() {
+    let parseDevelopers: string[] = [];
     if (this.newProductForm.invalid) {
       alert("Missing Fields");
     }
     else {
       console.log(this.newProductForm);
+      
+      for (let i = 0; i<this.newProductForm.value.developers.length; i++){
+        parseDevelopers.push(this.newProductForm.value.developers[i].developers);
+      }
       let newProduct = {
         productId: "",
         productName: this.newProductForm.value.productName,
         productOwnerName: this.newProductForm.value.productOwner,
-        developers: this.newProductForm.value.developers,
+        developers: parseDevelopers,
         scrumMasterName: this.newProductForm.value.scrumMaster,
         startDate: this.newProductForm.value.startDate,
         methodology: this.newProductForm.value.methodology

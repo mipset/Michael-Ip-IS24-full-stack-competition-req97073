@@ -60,6 +60,7 @@ export class DataTableComponent implements OnInit {
   filteredListForDevelopers!: Observable<any[]>;
   filterOptionsForm: FormGroup = new FormGroup({});
   productLength = 0;
+  expandedElement: any | null;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -81,7 +82,6 @@ export class DataTableComponent implements OnInit {
     this.dataTableService.getProductList().subscribe((backendData) => {
       this.frontendData = backendData.productList;
       this.tableData = new MatTableDataSource(this.frontendData);
-      console.log(this.tableData);
       this.productLength = this.tableData.filteredData.length;
       this.tableData.paginator = this.paginator;
       this.tableData.sort = this.sort;
@@ -174,25 +174,22 @@ export class DataTableComponent implements OnInit {
         return;
       }
       newProductData.productId = this.checkHighestIdValue() + 1;
-      console.log(newProductData);
+      this.dataTableService.addProduct(newProductData);
+      this.frontendData.unshift(newProductData);
+      console.log(this.frontendData);
+      this.tableData.data = this.frontendData;
 
-      // this.adminService.updateUserRequestData(
-      //   user.userId,
-      //   user.tenderId
-      // );
-      // this.updateLocalCache(user);
-      // this.Requested--;
-      // this.Fulfilled++;
     });
   }
 
   checkHighestIdValue() {
-    let sortingData = this.frontendData;
-    sortingData.sort((a, b) => b.productId - a.productId);
+    let sortingData = [...this.frontendData].sort((a, b) => b.productId - a.productId);
     return sortingData[0].productId;
   }
 
-  editProduct(i: number) {}
+  editProduct(i: number) {
+    console.log('blah');
+  }
 
   deleteProduct(i: number) {}
 }
