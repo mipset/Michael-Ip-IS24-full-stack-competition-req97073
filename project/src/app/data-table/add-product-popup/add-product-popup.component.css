@@ -10,3 +10,8 @@
 .add-btn{
   margin-bottom: 1rem;
 }
+
+.add-product-developer-delete{
+  margin-left: 1rem;
+  cursor: pointer;
+}

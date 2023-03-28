@@ -11,13 +11,19 @@
         type="text"
         matInput
         formControlName="scrumMasterFilter"
-        (keyup)="filterTable($event); this.filterOptionsForm.get('developerFilter')?.setValue('')"
+        (keyup)="
+          filterTable($event);
+          this.filterOptionsForm.get('developerFilter')?.setValue('')
+        "
         [matAutocomplete]="scrum"
       />
       <mat-hint>Filter Scrum Masters</mat-hint>
       <mat-autocomplete
         #scrum="matAutocomplete"
-        (optionSelected)="filterTable($event); this.filterOptionsForm.get('developerFilter')?.setValue('')"
+        (optionSelected)="
+          filterTable($event);
+          this.filterOptionsForm.get('developerFilter')?.setValue('')
+        "
         hideSingleSelectionIndicator="true"
       >
         <mat-option
@@ -34,13 +40,19 @@
         type="text"
         matInput
         formControlName="developerFilter"
-        (keyup)="filterTable($event); this.filterOptionsForm.get('scrumMasterFilter')?.setValue('');"
+        (keyup)="
+          filterTable($event);
+          this.filterOptionsForm.get('scrumMasterFilter')?.setValue('')
+        "
         [matAutocomplete]="develop"
       />
       <mat-hint>Filter Developers</mat-hint>
       <mat-autocomplete
         #develop="matAutocomplete"
-        (optionSelected)="filterTable($event); this.filterOptionsForm.get('scrumMasterFilter')?.setValue('');"
+        (optionSelected)="
+          filterTable($event);
+          this.filterOptionsForm.get('scrumMasterFilter')?.setValue('')
+        "
         hideSingleSelectionIndicator="true"
       >
         <mat-option
@@ -112,7 +124,10 @@
       <td mat-cell *matCellDef="let product; let i = index">
         <button
           mat-icon-button
-          (click)="expandedElement = expandedElement === product ? null : product; editProduct(i);"
+          (click)="
+            expandedElement = expandedElement === product ? null : product;
+            editProduct(i)
+          "
         >
           <mat-icon>edit</mat-icon>
         </button>
@@ -120,7 +135,7 @@
           <mat-icon>delete</mat-icon>
         </button>
       </td>
-    </ng-container> 
+    </ng-container>
 
     <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
     <ng-container matColumnDef="expandedDetail">
@@ -131,19 +146,59 @@
       >
         <div
           class="example-element-detail"
-          [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-         
+          [@detailExpand]="
+            element == expandedElement ? 'expanded' : 'collapsed'
+          "
+        >
+          <form>
+            <mat-form-field style="margin-left: 2rem">
+              <input matInput type="text" />
+              <mat-hint>Product Name</mat-hint>
+            </mat-form-field>
+            <mat-form-field style="margin-left: 2rem">
+              <input matInput type="text" />
+              <mat-hint>Product Owner</mat-hint>
+            </mat-form-field>
+            <mat-form-field style="margin-left: 2rem">
+              <input matInput type="text" />
+              <mat-hint>Developers</mat-hint>
+            </mat-form-field>
+            <mat-form-field style="margin-left: 2rem">
+              <input matInput type="text" />
+              <mat-hint>Scrum Master</mat-hint>
+            </mat-form-field>
+            <mat-form-field style="margin-left: 2rem">
+              <mat-select>
+                <mat-option value="Agile">Agile</mat-option>
+                <mat-option value="Waterfall">Waterfall</mat-option>
+              </mat-select>
+              <mat-hint>Methodology</mat-hint>
+            </mat-form-field>
+
+            <button
+              style="margin-left: 2rem"
+              mat-raised-button
+              (click)="resetFilters()"
+            >
+              Save Changes
+            </button>
+          </form>
         </div>
       </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr
+      class="example-element-row"
       mat-row
       *matRowDef="let element; columns: displayedColumns"
-       [class.example-expanded-row]="expandedElement === element"
+      [class.example-expanded-row]="expandedElement === element"
     ></tr>
-    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" ></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: ['expandedDetail']"
+      class="example-detail-row"
+    ></tr>
   </table>
   <mat-paginator [pageSizeOptions]="[15, 30, 45]" showFirstLastButtons>
   </mat-paginator>

@@ -40,6 +40,7 @@
             <mat-label>Developer Name</mat-label>
             <input matInput type="text" required formControlName="developers">
           </mat-form-field>
+          <mat-icon class="add-product-developer-delete" (click)="removeDeveloper(i);">remove_circle_outline</mat-icon>
         </div>
       </ng-container>
     </ng-container>
