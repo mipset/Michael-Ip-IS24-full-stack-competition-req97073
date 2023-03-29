@@ -8,12 +8,12 @@
     <br>
     <mat-form-field class="half-field">
       <mat-label>Product Owner</mat-label>
-      <input matInput type="text" required formControlName="productOwner">
+      <input matInput type="text" required formControlName="productOwner" (keyup)="checkValidText($event)">
     </mat-form-field>
 
     <mat-form-field class="half-field">
       <mat-label>Scrum Master</mat-label>
-      <input matInput type="text" required formControlName="scrumMaster">
+      <input matInput type="text" required formControlName="scrumMaster" (keyup)="checkValidText($event)">
     </mat-form-field>
     <br>
     <mat-form-field class="half-field">
@@ -33,14 +33,14 @@
     </mat-form-field>
     <br>
     <ng-container formArrayName="developers">
-      <button mat-raised-button type="button" class="add-btn" (click)="addDeveloper()">Add Developers <mat-icon>add</mat-icon></button>
+      <button mat-raised-button type="button" [disabled]="developers.length>4" class="add-btn" (click)="addDeveloper()">Add Developers <mat-icon>add</mat-icon></button>
       <ng-container *ngFor="let developerForm of developers.controls; let i = index">
         <div [formGroupName]="i">
           <mat-form-field class="half-field">
             <mat-label>Developer Name</mat-label>
-            <input matInput type="text" required formControlName="developers">
+            <input matInput type="text" required formControlName="developers" (keyup)="checkValidText($event)">
           </mat-form-field>
-          <mat-icon class="add-product-developer-delete" (click)="removeDeveloper(i);">remove_circle_outline</mat-icon>
+          <mat-icon *ngIf="this.developers.length>1" class="add-product-developer-delete" (click)="removeDeveloper(i);">remove_circle_outline</mat-icon>
         </div>
       </ng-container>
     </ng-container>
@@ -49,6 +49,7 @@
 
 </mat-dialog-content>
 <mat-dialog-actions align="end">
+  <mat-error *ngIf="hasError">Oops!... Enter Letters Only...  </mat-error>
   <button mat-raised-button [mat-dialog-close]="false">Cancel</button>
-  <button mat-raised-button cdkFocusInitial (click)="addProduct()">Save</button>
+  <button mat-raised-button [disabled]="newProductForm.invalid" cdkFocusInitial (click)="addProduct()">Save</button>
 </mat-dialog-actions>

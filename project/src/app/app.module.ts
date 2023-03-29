@@ -20,9 +20,16 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { AddProductPopupComponent } from './data-table/add-product-popup/add-product-popup.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSortModule } from '@angular/material/sort';
+import { DeleteProductDialog } from './data-table/delete-product-dialog/delete-product-dialog.component';
+import { ConfirmStopEditPopup } from './data-table/confirm-stop-edit-popup/confirm-stop-edit-popup.component';
 
 @NgModule({
-  declarations: [AppComponent, DataTableComponent, AddProductPopupComponent],
+  declarations: [
+    AppComponent, 
+    DataTableComponent,
+    AddProductPopupComponent,
+    ConfirmStopEditPopup, 
+    DeleteProductDialog],
   imports: [
     BrowserModule,
     AppRoutingModule,

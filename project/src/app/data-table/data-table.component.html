@@ -78,7 +78,7 @@
 
   <br />
 
-  <table
+  <table #table
     mat-table
     [dataSource]="tableData"
     class="mat-elevation-z24"
@@ -86,52 +86,49 @@
   >
     <ng-container matColumnDef="productId">
       <th mat-header-cell *matHeaderCellDef>Product Number</th>
-      <td mat-cell *matCellDef="let product">{{ product.productId }}</td>
+      <td mat-cell class="data-row" *matCellDef="let product">{{ product.productId }}</td>
     </ng-container>
 
     <ng-container matColumnDef="productName">
       <th mat-header-cell *matHeaderCellDef>Product Name</th>
-      <td mat-cell *matCellDef="let product">{{ product.productName }}</td>
+      <td mat-cell class="data-row" *matCellDef="let product">{{ product.productName }}</td>
     </ng-container>
 
     <ng-container matColumnDef="productOwnerName">
       <th mat-header-cell *matHeaderCellDef>Product Owner</th>
-      <td mat-cell *matCellDef="let product">{{ product.productOwnerName }}</td>
+      <td mat-cell class="data-row" *matCellDef="let product">{{ product.productOwnerName }}</td>
     </ng-container>
 
     <ng-container matColumnDef="developers">
       <th mat-header-cell *matHeaderCellDef>Developers</th>
-      <td mat-cell *matCellDef="let product">{{ product.developers }}</td>
+      <td mat-cell class="data-row" *matCellDef="let product">{{ product.developers }}</td>
     </ng-container>
 
     <ng-container matColumnDef="scrumMasterName">
       <th mat-header-cell *matHeaderCellDef>Scrum Master</th>
-      <td mat-cell *matCellDef="let product">{{ product.scrumMasterName }}</td>
+      <td mat-cell class="data-row" *matCellDef="let product">{{ product.scrumMasterName }}</td>
     </ng-container>
 
     <ng-container matColumnDef="startDate">
       <th mat-header-cell *matHeaderCellDef>Start Date</th>
-      <td mat-cell *matCellDef="let product">{{ product.startDate }}</td>
+      <td mat-cell class="data-row" *matCellDef="let product">{{ product.startDate }}</td>
     </ng-container>
 
     <ng-container matColumnDef="methodology">
       <th mat-header-cell *matHeaderCellDef>Methodology</th>
-      <td mat-cell *matCellDef="let product">{{ product.methodology }}</td>
+      <td mat-cell class="data-row"  *matCellDef="let product">{{ product.methodology }}</td>
     </ng-container>
 
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
-      <td mat-cell *matCellDef="let product; let i = index">
+      <td mat-cell class="data-row" *matCellDef="let product; let index = dataIndex">
         <button
           mat-icon-button
-          (click)="
-            expandedElement = expandedElement === product ? null : product;
-            editProduct(i)
-          "
+          (click)="editProduct(product, index)"
         >
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-icon-button (click)="deleteProduct(i)">
+        <button mat-icon-button (click)="deleteProduct(product, index)">
           <mat-icon>delete</mat-icon>
         </button>
       </td>
@@ -141,47 +138,73 @@
     <ng-container matColumnDef="expandedDetail">
       <td
         mat-cell
-        *matCellDef="let element"
+        *matCellDef="let product"
         [attr.colspan]="displayedColumns.length"
       >
         <div
           class="example-element-detail"
           [@detailExpand]="
-            element == expandedElement ? 'expanded' : 'collapsed'
+            product == expandedElement ? 'expanded' : 'collapsed'
           "
         >
-          <form>
-            <mat-form-field style="margin-left: 2rem">
-              <input matInput type="text" />
-              <mat-hint>Product Name</mat-hint>
-            </mat-form-field>
-            <mat-form-field style="margin-left: 2rem">
-              <input matInput type="text" />
-              <mat-hint>Product Owner</mat-hint>
-            </mat-form-field>
-            <mat-form-field style="margin-left: 2rem">
-              <input matInput type="text" />
-              <mat-hint>Developers</mat-hint>
-            </mat-form-field>
-            <mat-form-field style="margin-left: 2rem">
-              <input matInput type="text" />
-              <mat-hint>Scrum Master</mat-hint>
-            </mat-form-field>
-            <mat-form-field style="margin-left: 2rem">
-              <mat-select>
-                <mat-option value="Agile">Agile</mat-option>
-                <mat-option value="Waterfall">Waterfall</mat-option>
-              </mat-select>
-              <mat-hint>Methodology</mat-hint>
-            </mat-form-field>
+          <form [formGroup]="editProductForm" *ngIf="currentlyEditing">
+            <div style="width: 100%; margin: 0 auto;">
+              <button mat-raised-button [disabled]="editProductForm.invalid"
+                (click)="expandedElement = expandedElement === product ? null : product;
+                  saveEditProduct(product)">
+                Save Changes
+              </button>
 
-            <button
-              style="margin-left: 2rem"
-              mat-raised-button
-              (click)="resetFilters()"
-            >
-              Save Changes
-            </button>
+              <mat-form-field class="edit-box">
+                <input matInput type="text" formControlName="productName" />
+                <mat-hint>Product Name</mat-hint>
+              </mat-form-field>
+              <mat-form-field class="edit-box">
+                <input matInput type="text" formControlName="productOwner" />
+                <mat-hint>Product Owner</mat-hint>
+              </mat-form-field>
+              <mat-form-field class="edit-box">
+                <input matInput type="text" formControlName="scrumMaster" />
+                <mat-hint>Scrum Master</mat-hint>
+              </mat-form-field>
+              <mat-form-field class="edit-box">
+                <mat-select formControlName="methodology">
+                  <mat-option value="Agile">Agile</mat-option>
+                  <mat-option value="Waterfall">Waterfall</mat-option>
+                </mat-select>
+                <mat-hint>Methodology</mat-hint>
+              </mat-form-field>
+              <mat-error *ngIf="editProductForm.invalid"> All fields must be filled...</mat-error>
+            </div>
+            <div style="width: 100%; margin: 0 auto;">
+              <button
+                mat-raised-button
+                (click)="editAddDeveloper()" type="button" [disabled]="developers.length>4"
+              >
+                Add Developer
+              </button>
+              <ng-container formArrayName="developers">
+                <ng-container
+                  *ngFor="
+                    let developerForm of developers.controls;
+                    let i = index
+                  "
+                >
+                  <ng-container [formGroupName]="i">
+                    <mat-form-field class="edit-box">
+                      <input
+                        matInput                        
+                        formControlName="developers"
+                      >
+                      <mat-icon matSuffix  *ngIf="this.developers.length>1" 
+                        class="edit-developer-delete" (click)="removeDeveloper(i);">remove_circle_outline</mat-icon>
+
+                      <mat-hint>Developers</mat-hint>
+                    </mat-form-field>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </div>
           </form>
         </div>
       </td>

@@ -11,12 +11,12 @@ export class DataTableService {
 
   getProductList() {
     return this.http.get<{ message: string; productList: ProductModel[] }>(
-      `${BACKEND_URL}/products/getProductList`
+      `${BACKEND_URL}/products/`
     );
   }
 
   addProduct(newProduct: ProductModel) {
-    this.http.post(`${BACKEND_URL}/products/addProduct`, newProduct).subscribe({
+    this.http.post(`${BACKEND_URL}/products/`, newProduct).subscribe({
       next: (response) => console.log(response),
       error: (err) => {
         alert(
@@ -25,5 +25,29 @@ export class DataTableService {
         console.log(err);
       },
     });
+  }
+
+  editProduct(editedProduct: ProductModel){
+   this.http.put(`${BACKEND_URL}/products/${editedProduct.productId}`, editedProduct).subscribe({
+    next: (response) => console.log(response),
+      error: (err) => {
+        alert(
+          'Something went wrong with editing a product. Please check logs or try again'
+        );
+        console.log(err);
+      },
+   });
+  }
+
+  deleteProduct(product: ProductModel){
+   this.http.delete(`${BACKEND_URL}/products/${product.productId}`).subscribe({
+    next: (response) => console.log(response),
+      error: (err) => {
+        alert(
+          'Something went wrong with editing a product. Please check logs or try again'
+        );
+        console.log(err);
+      },
+   });
   }
 }

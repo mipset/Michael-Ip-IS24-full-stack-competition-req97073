@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
   FormArray,
@@ -22,6 +23,7 @@ export class AddProductPopupComponent {
   ) {}
 
   newProductForm: FormGroup = new FormGroup({});
+  hasError: boolean = false;
 
   ngOnInit() {
     this.initializeForm();
@@ -29,11 +31,11 @@ export class AddProductPopupComponent {
 
   initializeForm() {
     this.newProductForm = this.fb.group({
-      productName: [''],
-      productOwner: [''],
-      scrumMaster: [''],
-      startDate: [''],
-      methodology: [''],
+      productName: ['', [Validators.required]],
+      productOwner: ['', [Validators.required]],
+      scrumMaster: ['', [Validators.required]],
+      startDate: ['', [Validators.required]],
+      methodology: ['', [Validators.required]],
       developers: this.fb.array([]),
     });
     this.addDeveloper();
@@ -45,28 +47,33 @@ export class AddProductPopupComponent {
 
   addDeveloper() {
     if (this.developers.length > 4) {
-      alert('limit 5 developers');
       return;
     }
     const newDeveloper = this.fb.group({
-      developers: [''],
+      developers: ['', [Validators.required]],
     });
     this.developers.push(newDeveloper);
   }
 
   removeDeveloper(i: number) {
+    if (this.developers.length<2){
+      return;
+    }
     this.developers.removeAt(i);
   }
   checkValidText(x: any) {
     if (!/^[a-zA-Z ]*$/.test(x.target.value)) {
-      console.log('Letters Only Please');
+      this.hasError = true;
+    }
+    else{
+      this.hasError = false;
     }
   }
 
   addProduct() {
     let parseDevelopers: string[] = [];
     if (this.newProductForm.invalid) {
-      alert('Missing Fields');
+      return
     } else {
       console.log(this.newProductForm);
 
@@ -75,13 +82,14 @@ export class AddProductPopupComponent {
           this.newProductForm.value.developers[i].developers
         );
       }
+      let formattedDate = formatDate(new Date(this.newProductForm.value.startDate), "yyyy/MM/dd", 'en')
       let newProduct = {
         productId: '',
         productName: this.newProductForm.value.productName,
         productOwnerName: this.newProductForm.value.productOwner,
         developers: parseDevelopers,
         scrumMasterName: this.newProductForm.value.scrumMaster,
-        startDate: this.newProductForm.value.startDate,
+        startDate: formattedDate,
         methodology: this.newProductForm.value.methodology,
       };
       console.log(newProduct);

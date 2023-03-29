@@ -3,11 +3,8 @@
   padding: 75px 175px 75px 175px;
 }
 
-tr.mapping-row:hover {
-  background: gray;
-}
 
-td,
+td.data-row,
 th {
   text-align: center !important;
   vertical-align: middle !important;
@@ -26,7 +23,6 @@ tr.example-detail-row {
   height: 0;
 }
 
-
 .example-element-detail {
   overflow: hidden;
   display: flex;
@@ -36,3 +32,11 @@ tr.example-detail-row {
   border-bottom-width: 0;
 }
 
+mat-form-field.edit-box{
+  margin-left: 2rem;
+  width:14rem
+}
+
+.edit-developer-delete{
+  cursor: pointer;
+}

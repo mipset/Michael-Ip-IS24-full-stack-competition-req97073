@@ -1,9 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Observable, map, startWith } from 'rxjs';
 import { DataTableService } from './data-table.service';
 import { AddProductPopupComponent } from './add-product-popup/add-product-popup.component';
@@ -16,6 +22,8 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import { ConfirmStopEditPopup } from './confirm-stop-edit-popup/confirm-stop-edit-popup.component';
+import { DeleteProductDialog } from './delete-product-dialog/delete-product-dialog.component';
 
 // function autocompleteObjectValidator(): ValidatorFn {
 //   return (control: AbstractControl): { [key: string]: any } | null => {
@@ -59,10 +67,13 @@ export class DataTableComponent implements OnInit {
   filteredListForScrumMaster!: Observable<any[]>;
   filteredListForDevelopers!: Observable<any[]>;
   filterOptionsForm: FormGroup = new FormGroup({});
+  editProductForm: FormGroup = new FormGroup({});
   productLength = 0;
   expandedElement: any | null;
+  currentlyEditing: boolean = false;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatTable) table!: MatTable<ProductModel>;
 
   constructor(
     private dataTableService: DataTableService,
@@ -176,20 +187,123 @@ export class DataTableComponent implements OnInit {
       newProductData.productId = this.checkHighestIdValue() + 1;
       this.dataTableService.addProduct(newProductData);
       this.frontendData.unshift(newProductData);
-      console.log(this.frontendData);
       this.tableData.data = this.frontendData;
-
+      this.productLength = this.tableData.filteredData.length;
     });
   }
 
   checkHighestIdValue() {
-    let sortingData = [...this.frontendData].sort((a, b) => b.productId - a.productId);
+    let sortingData = [...this.frontendData].sort(
+      (a, b) => b.productId - a.productId
+    );
     return sortingData[0].productId;
   }
 
-  editProduct(i: number) {
-    console.log('blah');
+  editProduct(product: ProductModel, index: number) {
+    if (this.currentlyEditing) {
+      const confirmStopEdit = this.dialog.open(ConfirmStopEditPopup);
+      confirmStopEdit.afterClosed().subscribe((result) => {
+        if (result) {
+          this.currentlyEditing = false;
+          this.expandedElement =
+            this.expandedElement == product ? null : product;
+          return;
+        } else {
+          return;
+        }
+      });
+    } else {
+      const actualIndex = index + this.paginator.pageIndex * this.paginator.pageSize; 
+      this.initializeEditingForm(actualIndex);
+      this.currentlyEditing = true;
+      this.expandedElement = this.expandedElement == product ? null : product;
+    }
   }
 
-  deleteProduct(i: number) {}
+  initializeEditingForm(index: number) {
+    this.editProductForm = this.fb.group({
+      productName: [
+        this.tableData.data[index].productName,
+        [Validators.required],
+      ],
+      productOwner: [
+        this.tableData.data[index].productOwnerName,
+        [Validators.required],
+      ],
+      scrumMaster: [
+        this.tableData.data[index].scrumMasterName,
+        [Validators.required],
+      ],
+      methodology: [
+        this.tableData.data[index].methodology,
+        [Validators.required],
+      ],
+      developers: this.fb.array([]),
+    });
+    this.loadDevelopersArray(this.tableData.data[index].developers);
+  }
+
+  get developers() {
+    return this.editProductForm.controls['developers'] as FormArray;
+  }
+
+  loadDevelopersArray(developerArray: string[]) {
+    for (let i = 0; i < developerArray.length; i++) {
+      let developerControl = this.fb.group({
+        developers: [developerArray[i], [Validators.required]],
+      });
+      this.developers.push(developerControl);
+    }
+  }
+
+  editAddDeveloper() {
+    if (this.developers.length > 4) {
+      return;
+    }
+    const newDeveloper = this.fb.group({
+      developers: ['', [Validators.required]],
+    });
+    this.developers.push(newDeveloper);
+  }
+
+  removeDeveloper(index: number) {
+    if (this.developers.length < 2) {
+      return;
+    }
+    this.developers.removeAt(index);
+  }
+
+  saveEditProduct(product: ProductModel) {
+    this.currentlyEditing = false;
+    let parseDevelopers: string[] = [];
+    for (let i = 0; i < this.editProductForm.value.developers.length; i++) {
+      parseDevelopers.push(
+        this.editProductForm.value.developers[i].developers
+      );
+    }
+    product.productName = this.editProductForm.value.productName;
+    product.productOwnerName = this.editProductForm.value.productOwner;
+    product.scrumMasterName = this.editProductForm.value.scrumMaster;
+    product.methodology = this.editProductForm.value.methodology;
+    product.developers = parseDevelopers
+    this.dataTableService.editProduct(product);
+  }
+
+  deleteProduct(product: ProductModel, index: number) {
+    const actualIndex = index + this.paginator.pageIndex * this.paginator.pageSize; 
+    let deletePopup = this.dialog.open(DeleteProductDialog);
+    deletePopup.afterClosed().subscribe(result =>{
+      if (result){
+        this.dataTableService.deleteProduct(product);
+        this.frontendData.splice(actualIndex,1);
+        this.tableData.data = this.frontendData;
+        this.productLength = this.tableData.filteredData.length;
+        this.table.renderRows();
+      }
+      else{
+        return;
+      }
+    })
+
+  }
 }
