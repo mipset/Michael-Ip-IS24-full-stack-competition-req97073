@@ -24,6 +24,7 @@ import {
 } from '@angular/animations';
 import { ConfirmStopEditPopup } from './confirm-stop-edit-popup/confirm-stop-edit-popup.component';
 import { DeleteProductDialog } from './delete-product-dialog/delete-product-dialog.component';
+import { ConfirmCloseDialogComponent } from './confirm-close-dialog/confirm-close-dialog.component';
 
 // function autocompleteObjectValidator(): ValidatorFn {
 //   return (control: AbstractControl): { [key: string]: any } | null => {
@@ -71,6 +72,7 @@ export class DataTableComponent implements OnInit {
   productLength = 0;
   expandedElement: any | null;
   currentlyEditing: boolean = false;
+  formDirty: boolean = false;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<ProductModel>;
@@ -79,7 +81,7 @@ export class DataTableComponent implements OnInit {
     private dataTableService: DataTableService,
     private fb: FormBuilder,
     public dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.filterOptionsForm = this.fb.group({
@@ -180,6 +182,20 @@ export class DataTableComponent implements OnInit {
     const addProductPopup = this.dialog.open(AddProductPopupComponent, {
       disableClose: true,
     });
+    addProductPopup.backdropClick().subscribe(()=>{
+      const closePopupDialog = this.dialog.open(ConfirmCloseDialogComponent,{
+        disableClose: true
+      })
+      closePopupDialog.afterClosed().subscribe(result=>{
+        if (result){
+          addProductPopup.close();
+        }
+        else{
+          return;
+        }
+      })
+    })
+
     addProductPopup.afterClosed().subscribe((newProductData) => {
       if (!newProductData) {
         return;
@@ -201,19 +217,25 @@ export class DataTableComponent implements OnInit {
 
   editProduct(product: ProductModel, index: number) {
     if (this.currentlyEditing) {
-      const confirmStopEdit = this.dialog.open(ConfirmStopEditPopup);
-      confirmStopEdit.afterClosed().subscribe((result) => {
-        if (result) {
-          this.currentlyEditing = false;
-          this.expandedElement =
-            this.expandedElement == product ? null : product;
-          return;
-        } else {
-          return;
-        }
-      });
+      if (this.editProductForm.dirty) {
+        const confirmStopEdit = this.dialog.open(ConfirmStopEditPopup);
+        confirmStopEdit.afterClosed().subscribe((result) => {
+          if (result) {
+            this.currentlyEditing = false;
+            this.expandedElement =
+              this.expandedElement == product ? null : product;
+            return;
+          } else {
+            return;
+          }
+        });
+      }
+      else{
+        this.currentlyEditing = false;
+        this.expandedElement = this.expandedElement == product ? null : product;
+      }
     } else {
-      const actualIndex = index + this.paginator.pageIndex * this.paginator.pageSize; 
+      const actualIndex = index + this.paginator.pageIndex * this.paginator.pageSize;
       this.initializeEditingForm(actualIndex);
       this.currentlyEditing = true;
       this.expandedElement = this.expandedElement == product ? null : product;
@@ -290,17 +312,17 @@ export class DataTableComponent implements OnInit {
   }
 
   deleteProduct(product: ProductModel, index: number) {
-    const actualIndex = index + this.paginator.pageIndex * this.paginator.pageSize; 
+    const actualIndex = index + this.paginator.pageIndex * this.paginator.pageSize;
     let deletePopup = this.dialog.open(DeleteProductDialog);
-    deletePopup.afterClosed().subscribe(result =>{
-      if (result){
+    deletePopup.afterClosed().subscribe(result => {
+      if (result) {
         this.dataTableService.deleteProduct(product);
-        this.frontendData.splice(actualIndex,1);
+        this.frontendData.splice(actualIndex, 1);
         this.tableData.data = this.frontendData;
         this.productLength = this.tableData.filteredData.length;
         this.table.renderRows();
       }
-      else{
+      else {
         return;
       }
     })

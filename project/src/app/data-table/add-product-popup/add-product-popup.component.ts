@@ -7,7 +7,8 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { ConfirmCloseDialogComponent } from '../confirm-close-dialog/confirm-close-dialog.component';
 import { DataTableService } from '../data-table.service';
 
 @Component({
@@ -19,8 +20,9 @@ export class AddProductPopupComponent {
   constructor(
     private dataTableService: DataTableService,
     private fb: FormBuilder,
+    public dialog: MatDialog,
     public dialogRef: MatDialogRef<AddProductPopupComponent>
-  ) {}
+  ) { }
 
   newProductForm: FormGroup = new FormGroup({});
   hasError: boolean = false;
@@ -56,7 +58,7 @@ export class AddProductPopupComponent {
   }
 
   removeDeveloper(i: number) {
-    if (this.developers.length<2){
+    if (this.developers.length < 2) {
       return;
     }
     this.developers.removeAt(i);
@@ -65,7 +67,7 @@ export class AddProductPopupComponent {
     if (!/^[a-zA-Z ]*$/.test(x.target.value)) {
       this.hasError = true;
     }
-    else{
+    else {
       this.hasError = false;
     }
   }
@@ -92,8 +94,26 @@ export class AddProductPopupComponent {
         startDate: formattedDate,
         methodology: this.newProductForm.value.methodology,
       };
-      console.log(newProduct);
       this.dialogRef.close(newProduct);
+    }
+  }
+
+  confirmCancel() {
+    if (this.newProductForm.dirty) {
+      const closePopupDialog = this.dialog.open(ConfirmCloseDialogComponent, {
+        disableClose: true
+      })
+      closePopupDialog.afterClosed().subscribe(result => {
+        if (result) {
+          this.dialogRef.close();
+        }
+        else {
+          return;
+        }
+      })
+    }
+    else{
+      this.dialogRef.close();
     }
   }
 }

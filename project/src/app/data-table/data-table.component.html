@@ -7,68 +7,42 @@
 
   <form [formGroup]="filterOptionsForm">
     <mat-form-field>
-      <input
-        type="text"
-        matInput
-        formControlName="scrumMasterFilter"
-        (keyup)="
+      <input type="text" matInput formControlName="scrumMasterFilter" (keyup)="
           filterTable($event);
           this.filterOptionsForm.get('developerFilter')?.setValue('')
-        "
-        [matAutocomplete]="scrum"
-      />
+        " [matAutocomplete]="scrum" />
       <mat-hint>Filter Scrum Masters</mat-hint>
-      <mat-autocomplete
-        #scrum="matAutocomplete"
-        (optionSelected)="
+      <mat-autocomplete #scrum="matAutocomplete" (optionSelected)="
           filterTable($event);
           this.filterOptionsForm.get('developerFilter')?.setValue('')
-        "
-        hideSingleSelectionIndicator="true"
-      >
-        <mat-option
-          *ngFor="let option of filteredListForScrumMaster | async"
-          [value]="option"
-        >
-          {{ option }}
-        </mat-option>
+        " hideSingleSelectionIndicator="true">
+        <ng-container *ngIf="this.filterOptionsForm.value.scrumMasterFilter != ''">
+          <mat-option *ngFor="let option of filteredListForScrumMaster | async" [value]="option">
+            {{ option }}
+          </mat-option>
+        </ng-container>
       </mat-autocomplete>
     </mat-form-field>
 
     <mat-form-field style="margin-left: 2rem">
-      <input
-        type="text"
-        matInput
-        formControlName="developerFilter"
-        (keyup)="
+      <input type="text" matInput formControlName="developerFilter" (keyup)="
           filterTable($event);
           this.filterOptionsForm.get('scrumMasterFilter')?.setValue('')
-        "
-        [matAutocomplete]="develop"
-      />
+        " [matAutocomplete]="develop" />
       <mat-hint>Filter Developers</mat-hint>
-      <mat-autocomplete
-        #develop="matAutocomplete"
-        (optionSelected)="
+      <mat-autocomplete #develop="matAutocomplete" (optionSelected)="
           filterTable($event);
           this.filterOptionsForm.get('scrumMasterFilter')?.setValue('')
-        "
-        hideSingleSelectionIndicator="true"
-      >
-        <mat-option
-          *ngFor="let option of filteredListForDevelopers | async"
-          [value]="option"
-        >
-          {{ option }}
-        </mat-option>
+        " hideSingleSelectionIndicator="true">
+        <ng-container *ngIf="this.filterOptionsForm.value.scrumMasterFilter != ''">
+          <mat-option *ngFor="let option of filteredListForDevelopers | async" [value]="option">
+            {{ option }}
+          </mat-option>
+        </ng-container>
       </mat-autocomplete>
     </mat-form-field>
 
-    <button
-      style="margin-left: 2rem"
-      mat-raised-button
-      (click)="resetFilters()"
-    >
+    <button style="margin-left: 2rem" mat-raised-button (click)="resetFilters()">
       Reset Filters
     </button>
     <button style="margin-left: 2rem" mat-raised-button (click)="addProduct()">
@@ -78,12 +52,7 @@
 
   <br />
 
-  <table #table
-    mat-table
-    [dataSource]="tableData"
-    class="mat-elevation-z24"
-    multiTemplateDataRows
-  >
+  <table #table mat-table [dataSource]="tableData" class="mat-elevation-z24" multiTemplateDataRows>
     <ng-container matColumnDef="productId">
       <th mat-header-cell *matHeaderCellDef>Product Number</th>
       <td mat-cell class="data-row" *matCellDef="let product">{{ product.productId }}</td>
@@ -116,16 +85,13 @@
 
     <ng-container matColumnDef="methodology">
       <th mat-header-cell *matHeaderCellDef>Methodology</th>
-      <td mat-cell class="data-row"  *matCellDef="let product">{{ product.methodology }}</td>
+      <td mat-cell class="data-row" *matCellDef="let product">{{ product.methodology }}</td>
     </ng-container>
 
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell class="data-row" *matCellDef="let product; let index = dataIndex">
-        <button
-          mat-icon-button
-          (click)="editProduct(product, index)"
-        >
+        <button mat-icon-button (click)="editProduct(product, index)">
           <mat-icon>edit</mat-icon>
         </button>
         <button mat-icon-button (click)="deleteProduct(product, index)">
@@ -136,21 +102,13 @@
 
     <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
     <ng-container matColumnDef="expandedDetail">
-      <td
-        mat-cell
-        *matCellDef="let product"
-        [attr.colspan]="displayedColumns.length"
-      >
-        <div
-          class="example-element-detail"
-          [@detailExpand]="
+      <td mat-cell *matCellDef="let product" [attr.colspan]="displayedColumns.length">
+        <div class="example-element-detail" [@detailExpand]="
             product == expandedElement ? 'expanded' : 'collapsed'
-          "
-        >
+          ">
           <form [formGroup]="editProductForm" *ngIf="currentlyEditing">
             <div style="width: 100%; margin: 0 auto;">
-              <button mat-raised-button [disabled]="editProductForm.invalid"
-                (click)="expandedElement = expandedElement === product ? null : product;
+              <button mat-raised-button [disabled]="editProductForm.invalid" (click)="expandedElement = expandedElement === product ? null : product;
                   saveEditProduct(product)">
                 Save Changes
               </button>
@@ -177,27 +135,19 @@
               <mat-error *ngIf="editProductForm.invalid"> All fields must be filled...</mat-error>
             </div>
             <div style="width: 100%; margin: 0 auto;">
-              <button
-                mat-raised-button
-                (click)="editAddDeveloper()" type="button" [disabled]="developers.length>4"
-              >
+              <button mat-raised-button (click)="editAddDeveloper()" type="button" [disabled]="developers.length>4">
                 Add Developer
               </button>
               <ng-container formArrayName="developers">
-                <ng-container
-                  *ngFor="
+                <ng-container *ngFor="
                     let developerForm of developers.controls;
                     let i = index
-                  "
-                >
+                  ">
                   <ng-container [formGroupName]="i">
                     <mat-form-field class="edit-box">
-                      <input
-                        matInput                        
-                        formControlName="developers"
-                      >
-                      <mat-icon matSuffix  *ngIf="this.developers.length>1" 
-                        class="edit-developer-delete" (click)="removeDeveloper(i);">remove_circle_outline</mat-icon>
+                      <input matInput formControlName="developers">
+                      <mat-icon matSuffix *ngIf="this.developers.length>1" class="edit-developer-delete"
+                        (click)="removeDeveloper(i);">remove_circle_outline</mat-icon>
 
                       <mat-hint>Developers</mat-hint>
                     </mat-form-field>
@@ -211,17 +161,9 @@
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr
-      class="example-element-row"
-      mat-row
-      *matRowDef="let element; columns: displayedColumns"
-      [class.example-expanded-row]="expandedElement === element"
-    ></tr>
-    <tr
-      mat-row
-      *matRowDef="let row; columns: ['expandedDetail']"
-      class="example-detail-row"
-    ></tr>
+    <tr class="example-element-row" mat-row *matRowDef="let element; columns: displayedColumns"
+      [class.example-expanded-row]="expandedElement === element"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
   </table>
   <mat-paginator [pageSizeOptions]="[15, 30, 45]" showFirstLastButtons>
   </mat-paginator>

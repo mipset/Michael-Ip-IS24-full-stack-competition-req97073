@@ -50,6 +50,6 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <mat-error *ngIf="hasError">Oops!... Enter Letters Only...  </mat-error>
-  <button mat-raised-button [mat-dialog-close]="false">Cancel</button>
+  <button mat-raised-button (click)="confirmCancel();">Cancel</button>
   <button mat-raised-button [disabled]="newProductForm.invalid" cdkFocusInitial (click)="addProduct()">Save</button>
 </mat-dialog-actions>

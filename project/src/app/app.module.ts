@@ -22,14 +22,16 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSortModule } from '@angular/material/sort';
 import { DeleteProductDialog } from './data-table/delete-product-dialog/delete-product-dialog.component';
 import { ConfirmStopEditPopup } from './data-table/confirm-stop-edit-popup/confirm-stop-edit-popup.component';
+import { ConfirmCloseDialogComponent } from './data-table/confirm-close-dialog/confirm-close-dialog.component';
 
 @NgModule({
   declarations: [
-    AppComponent, 
+    AppComponent,
     DataTableComponent,
     AddProductPopupComponent,
-    ConfirmStopEditPopup, 
-    DeleteProductDialog],
+    ConfirmStopEditPopup,
+    DeleteProductDialog,
+    ConfirmCloseDialogComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

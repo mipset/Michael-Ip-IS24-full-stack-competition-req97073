@@ -16,7 +16,7 @@ export class DataTableService {
   }
 
   addProduct(newProduct: ProductModel) {
-    this.http.post(`${BACKEND_URL}/products/`, newProduct).subscribe({
+    this.http.post(`${BACKEND_URL}/products/${newProduct.productId}`, newProduct).subscribe({
       next: (response) => console.log(response),
       error: (err) => {
         alert(
