@@ -1,21 +1,37 @@
-.full-field{
-  width:100%
+.full-field {
+  width: 100%;
+  width: calc(100% - 10px);
+  padding: 0 5px;
 }
 
-.half-field{
-
-  width:50%
+.half-field {
+  width: 50%;
+  width: calc(50% - 10px);
+  padding: 0 5px;
 }
 
-.add-btn{
+.add-btn {
+  width: 50%;
+  width: calc(50% - 10px);
+  padding: 0 5px;
+  margin: 0 5px;
   margin-bottom: 1rem;
 }
 
-.add-product-developer-delete{
+.add-product-developer-delete {
   margin-left: 1rem;
   cursor: pointer;
 }
 
-mat-error{
+mat-error {
   font-weight: 900;
+}
+
+.field-row {
+  margin: 0px -10px 10px;
+}
+
+.popup-styling{
+  padding: 20px;
+  border-radius: 8px;
 }

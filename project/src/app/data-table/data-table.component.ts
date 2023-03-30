@@ -73,6 +73,7 @@ export class DataTableComponent implements OnInit {
   expandedElement: any | null;
   currentlyEditing: boolean = false;
   formDirty: boolean = false;
+  textOnlyError: boolean = false;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<ProductModel>;
@@ -182,25 +183,13 @@ export class DataTableComponent implements OnInit {
     const addProductPopup = this.dialog.open(AddProductPopupComponent, {
       disableClose: true,
     });
-    addProductPopup.backdropClick().subscribe(()=>{
-      const closePopupDialog = this.dialog.open(ConfirmCloseDialogComponent,{
-        disableClose: true
-      })
-      closePopupDialog.afterClosed().subscribe(result=>{
-        if (result){
-          addProductPopup.close();
-        }
-        else{
-          return;
-        }
-      })
-    })
 
     addProductPopup.afterClosed().subscribe((newProductData) => {
       if (!newProductData) {
         return;
       }
-      newProductData.productId = this.checkHighestIdValue() + 1;
+      newProductData.productId = this.checkHighestIdValue();
+      newProductData.productId++;
       this.dataTableService.addProduct(newProductData);
       this.frontendData.unshift(newProductData);
       this.tableData.data = this.frontendData;
@@ -208,7 +197,7 @@ export class DataTableComponent implements OnInit {
     });
   }
 
-  checkHighestIdValue() {
+  checkHighestIdValue() : number {
     let sortingData = [...this.frontendData].sort(
       (a, b) => b.productId - a.productId
     );
@@ -216,6 +205,7 @@ export class DataTableComponent implements OnInit {
   }
 
   editProduct(product: ProductModel, index: number) {
+
     if (this.currentlyEditing) {
       if (this.editProductForm.dirty) {
         const confirmStopEdit = this.dialog.open(ConfirmStopEditPopup);
@@ -296,6 +286,10 @@ export class DataTableComponent implements OnInit {
   }
 
   saveEditProduct(product: ProductModel) {
+    if(this.editProductForm.invalid || this.textOnlyError){
+      this.editProductForm.markAllAsTouched();
+      return;
+    }
     this.currentlyEditing = false;
     let parseDevelopers: string[] = [];
     for (let i = 0; i < this.editProductForm.value.developers.length; i++) {
@@ -309,6 +303,7 @@ export class DataTableComponent implements OnInit {
     product.methodology = this.editProductForm.value.methodology;
     product.developers = parseDevelopers
     this.dataTableService.editProduct(product);
+    this.expandedElement = this.expandedElement == product ? null : product;
   }
 
   deleteProduct(product: ProductModel, index: number) {
@@ -326,6 +321,16 @@ export class DataTableComponent implements OnInit {
         return;
       }
     })
+  }
 
+  checkValidText(x: any) {
+    if (!/^[a-zA-Z ]*$/.test(x.target.value)) {
+      this.textOnlyError = true;
+    }
+    else {
+      this.textOnlyError = false;
+    }
   }
 }
+
+

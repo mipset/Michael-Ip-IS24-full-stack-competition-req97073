@@ -28,6 +28,25 @@ export class AddProductPopupComponent {
   hasError: boolean = false;
 
   ngOnInit() {
+
+    this.dialogRef.backdropClick().subscribe(()=>{
+      if(this.newProductForm.dirty){
+        const closePopupDialog = this.dialog.open(ConfirmCloseDialogComponent,{
+          disableClose: true
+        })
+        closePopupDialog.afterClosed().subscribe(result=>{
+          if (result){
+            this.dialogRef.close();
+          }
+          else{
+            return;
+          }
+        })
+      }
+      else{
+        this.dialogRef.close();
+      }
+    })
     this.initializeForm();
   }
 
@@ -74,7 +93,8 @@ export class AddProductPopupComponent {
 
   addProduct() {
     let parseDevelopers: string[] = [];
-    if (this.newProductForm.invalid) {
+    if (this.newProductForm.invalid || this.hasError) {
+      this.newProductForm.markAllAsTouched();
       return
     } else {
       console.log(this.newProductForm);

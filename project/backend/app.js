@@ -2,12 +2,21 @@ const path = require("path");	// pathing shipped with nodeJS. construct path tha
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
+const swaggerUi = require('swagger-ui-express');
+const openApiDocumentation = require('./openapi_3.json');
 
 const productRoutes = require("./routes/products");
 
 app.set('trust proxy', true)
 app.use(bodyParser.urlencoded({ extended: true })); // supports only default features in the url encoding
 app.use(bodyParser.json());
+app.use((err,req,res,next)=>{
+  if (err){
+    res.status(500).json("Bad JSON");
+  }else{
+    next();
+  }
+})
 app.use("/", express.static(path.join(__dirname, "angular")));	// single program application, load angular folder index
 
 app.use((req, res, next) => {
@@ -18,6 +27,7 @@ app.use((req, res, next) => {
 })
 
 app.use("/api/products", productRoutes);
+app.use('/api/api-docs', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
 app.use((req, res, next) => {
   res.sendFile(path.join(__dirname, "angular", "index.html"));	// if no route is found, send index.html
 });

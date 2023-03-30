@@ -1,55 +1,75 @@
-<h2 mat-dialog-title>Add Product</h2>
-<mat-dialog-content class="mat-typography">
-  <form [formGroup]="newProductForm">
-    <mat-form-field class="full-field">
-      <mat-label>Product Name</mat-label>
-      <input matInput type="text" required formControlName="productName" (keyup)="checkValidText($event)">
-    </mat-form-field>
-    <br>
-    <mat-form-field class="half-field">
-      <mat-label>Product Owner</mat-label>
-      <input matInput type="text" required formControlName="productOwner" (keyup)="checkValidText($event)">
-    </mat-form-field>
+<div class="popup-styling">
+  <h2 mat-dialog-title>Add Product</h2>
+  <mat-dialog-content class="mat-typography">
+    <form [formGroup]="newProductForm">
+      <div class="field-row">
+        <mat-form-field class="full-field">
+          <mat-label>Product Name</mat-label>
+          <input matInput type="text" required formControlName="productName" (keyup)="checkValidText($event)">
+          <mat-error *ngIf="newProductForm.hasError('required','productName')">Enter Product Name</mat-error>
+        </mat-form-field>
+      </div>
 
-    <mat-form-field class="half-field">
-      <mat-label>Scrum Master</mat-label>
-      <input matInput type="text" required formControlName="scrumMaster" (keyup)="checkValidText($event)">
-    </mat-form-field>
-    <br>
-    <mat-form-field class="half-field">
-      <mat-label>Start Date</mat-label>
-      <input matInput [matDatepicker]="picker" required formControlName="startDate">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
+      <div class="field-row">
+        <mat-form-field class="half-field">
+          <mat-label>Product Owner</mat-label>
+          <input matInput type="text" required formControlName="productOwner" (keyup)="checkValidText($event)">
+          <mat-error>Enter Product Owner</mat-error>
+        </mat-form-field>
 
-    </mat-form-field>
+        <mat-form-field class="half-field">
+          <mat-label>Scrum Master</mat-label>
+          <input matInput type="text" required formControlName="scrumMaster" (keyup)="checkValidText($event)">
+          <mat-error>Enter Scrum Master</mat-error>
+        </mat-form-field>
+      </div>
 
-    <mat-form-field class="half-field">
-      <mat-label>Methodology</mat-label>
-      <mat-select formControlName="methodology">
-        <mat-option value="Agile">Agile</mat-option>
-        <mat-option value="Waterfall">Waterfall</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <br>
-    <ng-container formArrayName="developers">
-      <button mat-raised-button type="button" [disabled]="developers.length>4" class="add-btn" (click)="addDeveloper()">Add Developers <mat-icon>add</mat-icon></button>
-      <ng-container *ngFor="let developerForm of developers.controls; let i = index">
-        <div [formGroupName]="i">
-          <mat-form-field class="half-field">
-            <mat-label>Developer Name</mat-label>
-            <input matInput type="text" required formControlName="developers" (keyup)="checkValidText($event)">
-          </mat-form-field>
-          <mat-icon *ngIf="this.developers.length>1" class="add-product-developer-delete" (click)="removeDeveloper(i);">remove_circle_outline</mat-icon>
-        </div>
-      </ng-container>
-    </ng-container>
+      <div class="field-row">
+        <mat-form-field class="half-field">
+          <mat-label>Start Date</mat-label>
+          <input matInput [matDatepicker]="picker" required formControlName="startDate">
+          <mat-error>Select Start Date</mat-error>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
 
-  </form>
+        </mat-form-field>
 
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <mat-error *ngIf="hasError">Oops!... Enter Letters Only...  </mat-error>
-  <button mat-raised-button (click)="confirmCancel();">Cancel</button>
-  <button mat-raised-button [disabled]="newProductForm.invalid" cdkFocusInitial (click)="addProduct()">Save</button>
-</mat-dialog-actions>
+        <mat-form-field class="half-field">
+          <mat-label>Methodology</mat-label>
+          <mat-select formControlName="methodology">
+            <mat-option value="Agile">Agile</mat-option>
+            <mat-option value="Waterfall">Waterfall</mat-option>
+          </mat-select>
+          <mat-error>Select Methodology</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="field-row">
+        <button mat-raised-button type="button" [disabled]="developers.length>4" class="add-btn"
+          (click)="addDeveloper()">Add Developers <mat-icon>add</mat-icon></button>
+      </div>
+      <div class="field-row">
+        <ng-container formArrayName="developers">
+
+          <ng-container *ngFor="let developerForm of developers.controls; let i = index">
+            <div [formGroupName]="i">
+              <mat-form-field class="half-field">
+                <mat-label>Developer Name</mat-label>
+                <input matInput type="text" required formControlName="developers" (keyup)="checkValidText($event)">
+                <mat-error>Enter Developer</mat-error>
+              </mat-form-field>
+              <mat-icon *ngIf="this.developers.length>1" class="add-product-developer-delete"
+                (click)="removeDeveloper(i);">remove_circle_outline</mat-icon>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
+
+    </form>
+
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <mat-error *ngIf="hasError">Oops!... Enter Letters Only... </mat-error>
+    <button mat-raised-button (click)="confirmCancel();">Cancel</button>
+    <button type="submit" mat-raised-button cdkFocusInitial (click)="addProduct()">Save</button>
+  </mat-dialog-actions>
+</div>

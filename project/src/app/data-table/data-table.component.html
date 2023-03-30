@@ -1,17 +1,17 @@
 <div class="table-container">
-  <mat-toolbar color="accent">
+  <mat-toolbar class="toolbar-styling" color="accent">
     <div>Total Products: {{ productLength }}</div>
   </mat-toolbar>
 
   <br />
 
   <form [formGroup]="filterOptionsForm">
-    <mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Filter Scrum Master</mat-label>
       <input type="text" matInput formControlName="scrumMasterFilter" (keyup)="
           filterTable($event);
           this.filterOptionsForm.get('developerFilter')?.setValue('')
-        " [matAutocomplete]="scrum" />
-      <mat-hint>Filter Scrum Masters</mat-hint>
+        " [matAutocomplete]="scrum" placeholder="" />
       <mat-autocomplete #scrum="matAutocomplete" (optionSelected)="
           filterTable($event);
           this.filterOptionsForm.get('developerFilter')?.setValue('')
@@ -24,12 +24,12 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <mat-form-field style="margin-left: 2rem">
+    <mat-form-field appearance="fill" style="margin-left: 2rem">
+      <mat-label>Filter Developers</mat-label>
       <input type="text" matInput formControlName="developerFilter" (keyup)="
           filterTable($event);
           this.filterOptionsForm.get('scrumMasterFilter')?.setValue('')
         " [matAutocomplete]="develop" />
-      <mat-hint>Filter Developers</mat-hint>
       <mat-autocomplete #develop="matAutocomplete" (optionSelected)="
           filterTable($event);
           this.filterOptionsForm.get('scrumMasterFilter')?.setValue('')
@@ -42,10 +42,10 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <button style="margin-left: 2rem" mat-raised-button (click)="resetFilters()">
+    <button class="button-styling" mat-raised-button (click)="resetFilters()">
       Reset Filters
     </button>
-    <button style="margin-left: 2rem" mat-raised-button (click)="addProduct()">
+    <button class="button-styling" mat-raised-button (click)="addProduct()">
       Add Product
     </button>
   </form>
@@ -106,38 +106,37 @@
         <div class="example-element-detail" [@detailExpand]="
             product == expandedElement ? 'expanded' : 'collapsed'
           ">
-          <form [formGroup]="editProductForm" *ngIf="currentlyEditing">
-            <div style="width: 100%; margin: 0 auto;">
-              <button mat-raised-button [disabled]="editProductForm.invalid" (click)="expandedElement = expandedElement === product ? null : product;
-                  saveEditProduct(product)">
-                Save Changes
-              </button>
-
+          <form class="expansion-panel" [formGroup]="editProductForm" *ngIf="currentlyEditing">
+            <div class="edit-field-row">
               <mat-form-field class="edit-box">
-                <input matInput type="text" formControlName="productName" />
+                <input matInput type="text" required formControlName="productName" (keyup)="checkValidText($event)" />
                 <mat-hint>Product Name</mat-hint>
+                <mat-error>Enter Product Name</mat-error>
               </mat-form-field>
               <mat-form-field class="edit-box">
-                <input matInput type="text" formControlName="productOwner" />
+                <input matInput type="text" required formControlName="productOwner" (keyup)="checkValidText($event)" />
                 <mat-hint>Product Owner</mat-hint>
               </mat-form-field>
               <mat-form-field class="edit-box">
-                <input matInput type="text" formControlName="scrumMaster" />
+                <input matInput type="text" required formControlName="scrumMaster" (keyup)="checkValidText($event)" />
                 <mat-hint>Scrum Master</mat-hint>
               </mat-form-field>
               <mat-form-field class="edit-box">
-                <mat-select formControlName="methodology">
+                <mat-select formControlName="methodology" required>
                   <mat-option value="Agile">Agile</mat-option>
                   <mat-option value="Waterfall">Waterfall</mat-option>
                 </mat-select>
                 <mat-hint>Methodology</mat-hint>
               </mat-form-field>
-              <mat-error *ngIf="editProductForm.invalid"> All fields must be filled...</mat-error>
-            </div>
-            <div style="width: 100%; margin: 0 auto;">
-              <button mat-raised-button (click)="editAddDeveloper()" type="button" [disabled]="developers.length>4">
-                Add Developer
+
+
+              <button mat-raised-button type="button" (click)="saveEditProduct(product)" class="edit-button-position">
+                Save Changes
               </button>
+
+
+            </div>
+            <div class="edit-field-row">
               <ng-container formArrayName="developers">
                 <ng-container *ngFor="
                     let developerForm of developers.controls;
@@ -145,15 +144,24 @@
                   ">
                   <ng-container [formGroupName]="i">
                     <mat-form-field class="edit-box">
-                      <input matInput formControlName="developers">
+                      <input matInput formControlName="developers" required (keyup)="checkValidText($event)">
                       <mat-icon matSuffix *ngIf="this.developers.length>1" class="edit-developer-delete"
                         (click)="removeDeveloper(i);">remove_circle_outline</mat-icon>
-
                       <mat-hint>Developers</mat-hint>
+                      <mat-error>Enter Developer Name</mat-error>
                     </mat-form-field>
                   </ng-container>
                 </ng-container>
               </ng-container>
+              <button mat-raised-button (click)="editAddDeveloper()" type="button" [disabled]="developers.length>4"
+                class="edit-button-position">
+                Add Developer
+              </button>
+
+            </div>
+            <div class="edit-field-error">
+              <mat-error *ngIf="textOnlyError">Oops!... Enter Letters Only... </mat-error>
+
             </div>
           </form>
         </div>
