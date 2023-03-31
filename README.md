@@ -1,9 +1,12 @@
 # Michael-Ip's submission for citz-imb-full-stack-code-challenge-req97073
 ## Thank you for the opportunity to create this fun assignment and I hope you enjoy my solution.
-### For my solution, I used Angular and Angular Materials framework.
+### For my solution, I used Angular and Angular Materials framework built in typescript for my frontend. My backend is utilizing NodeJS and ExpressJS
 
 
 ## Installations
+### Base Setup
+`npm install`
+
 ### Angular CLI
 `npm install -g @angular/cli`
 
@@ -13,8 +16,19 @@
 ### Install Nodemon
 `npm install --save-dev nodemon`
 
+## Run Environment
+I have built my package to work as a single program application or dual program application. In your terminal run: 
+`npm run start:server`
+Program can be accessed through: 
+`http://localhost:3000/`
+
+To run the frontend separately, open a second terminal and run: 
+`ng serve`
+Program can then be accessed through: 
+`http://localhost:4200/`
+
 ## Solution
-When reviewing the 5 provided User Stories, it made most sense for me to utilize Angular Materials which provides many functionalities that are not overly complicated to implement while covering all the required cases. All 3 users and 2 bonus stories have been covered and incorporated into my solution.
+When reviewing the 5 provided User Stories, it made most sense for me to utilize Angular Materials which provides many functionalities that are not overly complicated to implement while covering all the required cases. All 3 user stories and 2 bonus stories have been covered and incorporated into my solution.
 - User Story 1: All columns fit on the page, titles visible and total number of products provided
 - User Story 2: Adding a new product generates a new ID that will not collide with existing ID. All fields must be answreed to save
 - User Story 3: Ability to edit individual product rows and a save button is provided
@@ -47,7 +61,7 @@ There is premade data proivded with 40 unique products utilizing the model as pe
 ### Additional Implementation
 - Expansion panels for editing which allows for easy comparison of old and new before you save
 - Added Sanitation check using Regex to text inputs to ensure data being sent to the back is clean (text only, no dropping tables here.)
-- Backend checks for fault cases outside of assuming the perfect scenario where a user uses the page as intended (Bad Data, Bad JSON)
+- Robust Error handling to ensure server response to bad requests properly without a crashing.
 - Pagination of table with multiple table sizes
 
 ## Swagger API Documentation
