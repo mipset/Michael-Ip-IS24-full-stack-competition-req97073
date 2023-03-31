@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // supports only default fea
 app.use(bodyParser.json());
 app.use((err,req,res,next)=>{
   if (err){
-    res.status(500).json("Bad JSON");
+    res.status(400).json("Bad JSON");
   }else{
     next();
   }

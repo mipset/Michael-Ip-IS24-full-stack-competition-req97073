@@ -29,6 +29,7 @@ export class AddProductPopupComponent {
 
   ngOnInit() {
 
+    //Check for when user clicks outside of dialog window
     this.dialogRef.backdropClick().subscribe(()=>{
       if(this.newProductForm.dirty){
         const closePopupDialog = this.dialog.open(ConfirmCloseDialogComponent,{
@@ -50,6 +51,7 @@ export class AddProductPopupComponent {
     this.initializeForm();
   }
 
+  //Reactive form
   initializeForm() {
     this.newProductForm = this.fb.group({
       productName: ['', [Validators.required]],
@@ -66,6 +68,7 @@ export class AddProductPopupComponent {
     return this.newProductForm.controls['developers'] as FormArray;
   }
 
+  //Add additional fields for developers up to max 5
   addDeveloper() {
     if (this.developers.length > 4) {
       return;
@@ -76,12 +79,15 @@ export class AddProductPopupComponent {
     this.developers.push(newDeveloper);
   }
 
+  //Remove developers until min 1
   removeDeveloper(i: number) {
     if (this.developers.length < 2) {
       return;
     }
     this.developers.removeAt(i);
   }
+
+  //Sanitary check to ensure only text is used for fields
   checkValidText(x: any) {
     if (!/^[a-zA-Z ]*$/.test(x.target.value)) {
       this.hasError = true;
@@ -91,6 +97,7 @@ export class AddProductPopupComponent {
     }
   }
 
+  //Submission code to add new product. If form is valid, object is formatted then sent as JSON to parent.
   addProduct() {
     let parseDevelopers: string[] = [];
     if (this.newProductForm.invalid || this.hasError) {
@@ -118,6 +125,7 @@ export class AddProductPopupComponent {
     }
   }
 
+  //Dialog to check if user didn't accidentally click cancel without saving form
   confirmCancel() {
     if (this.newProductForm.dirty) {
       const closePopupDialog = this.dialog.open(ConfirmCloseDialogComponent, {

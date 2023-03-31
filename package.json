@@ -24,7 +24,8 @@
     "rxjs": "~7.8.0",
     "swagger-ui-express": "^4.6.2",
     "tslib": "^2.3.0",
-    "zone.js": "~0.12.0"
+    "zone.js": "~0.12.0",
+    "nodemon": "^2.0.22"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^15.2.4",

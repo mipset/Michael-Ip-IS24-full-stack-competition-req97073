@@ -238,7 +238,7 @@
           "productId": {
             "type": "integer",
             "format": "int64",
-            "example": "10"
+            "example": 10
           },
           "productName": {
             "type": "string",

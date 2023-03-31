@@ -92,6 +92,7 @@ export class DataTableComponent implements OnInit {
     this.initialDataLoad();
   }
 
+  //Get data from backend
   initialDataLoad() {
     this.dataTableService.getProductList().subscribe((backendData) => {
       this.frontendData = backendData.productList;
@@ -104,6 +105,7 @@ export class DataTableComponent implements OnInit {
     });
   }
 
+  //load Auto-complete data once from end data is received
   loadAutoComplete() {
     this.filteredListForScrumMaster = this.scrumFieldControl.valueChanges.pipe(
       startWith(''),
@@ -131,6 +133,8 @@ export class DataTableComponent implements OnInit {
   get developerFieldControl() {
     return this.filterOptionsForm.get('developerFilter') as FormControl;
   }
+
+  //Filtering setup for Auto-complete
   private _filterScrumMaster(value: string): any[] {
     const filterValue = value.toLowerCase();
     return this.scrumMasterList.filter((name) =>
@@ -143,7 +147,6 @@ export class DataTableComponent implements OnInit {
       name.toLowerCase().includes(filterValue)
     );
   }
-
   sortFilterLists(tableData: any) {
     this.scrumMasterListFilter(tableData);
     this.developerListFilter(tableData);
@@ -161,6 +164,8 @@ export class DataTableComponent implements OnInit {
     }
   }
 
+
+  //filter table for either Scrum Master or Developers
   filterTable(filterText: any) {
     console.log(filterText);
     if (filterText.target) {
@@ -172,6 +177,7 @@ export class DataTableComponent implements OnInit {
     this.productLength = this.tableData.filteredData.length;
   }
 
+  //clear filters button
   resetFilters() {
     this.filterOptionsForm.get('scrumMasterFilter')?.setValue('');
     this.filterOptionsForm.get('developerFilter')?.setValue('');
@@ -179,6 +185,7 @@ export class DataTableComponent implements OnInit {
     this.productLength = this.tableData.filteredData.length;
   }
 
+  //From child component, passes data from the Add product form down, processed then saved as well as updating front end view
   addProduct() {
     const addProductPopup = this.dialog.open(AddProductPopupComponent, {
       disableClose: true,
@@ -197,15 +204,16 @@ export class DataTableComponent implements OnInit {
     });
   }
 
-  checkHighestIdValue() : number {
+  //sort product ID by highest and add a value to give the next product ID
+  checkHighestIdValue(): number {
     let sortingData = [...this.frontendData].sort(
       (a, b) => b.productId - a.productId
     );
     return sortingData[0].productId;
   }
 
+  //Initiate Editing function and Expansion panel
   editProduct(product: ProductModel, index: number) {
-
     if (this.currentlyEditing) {
       if (this.editProductForm.dirty) {
         const confirmStopEdit = this.dialog.open(ConfirmStopEditPopup);
@@ -220,7 +228,7 @@ export class DataTableComponent implements OnInit {
           }
         });
       }
-      else{
+      else {
         this.currentlyEditing = false;
         this.expandedElement = this.expandedElement == product ? null : product;
       }
@@ -268,6 +276,7 @@ export class DataTableComponent implements OnInit {
     }
   }
 
+  //Add additional developer up to 5
   editAddDeveloper() {
     if (this.developers.length > 4) {
       return;
@@ -278,6 +287,7 @@ export class DataTableComponent implements OnInit {
     this.developers.push(newDeveloper);
   }
 
+  //Remove developers minimum 1
   removeDeveloper(index: number) {
     if (this.developers.length < 2) {
       return;
@@ -285,8 +295,10 @@ export class DataTableComponent implements OnInit {
     this.developers.removeAt(index);
   }
 
+
+  //Save the Edited product, parse/process info and send to backend, also update front end.
   saveEditProduct(product: ProductModel) {
-    if(this.editProductForm.invalid || this.textOnlyError){
+    if (this.editProductForm.invalid || this.textOnlyError) {
       this.editProductForm.markAllAsTouched();
       return;
     }
@@ -306,6 +318,7 @@ export class DataTableComponent implements OnInit {
     this.expandedElement = this.expandedElement == product ? null : product;
   }
 
+  //Bonus feature to complete CRUD, delete any product
   deleteProduct(product: ProductModel, index: number) {
     const actualIndex = index + this.paginator.pageIndex * this.paginator.pageSize;
     let deletePopup = this.dialog.open(DeleteProductDialog);
@@ -323,6 +336,7 @@ export class DataTableComponent implements OnInit {
     })
   }
 
+  //Sanitary check to ensure only text is used for fields
   checkValidText(x: any) {
     if (!/^[a-zA-Z ]*$/.test(x.target.value)) {
       this.textOnlyError = true;
