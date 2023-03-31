@@ -17,15 +17,12 @@
 `npm install --save-dev nodemon`
 
 ## Run Environment
-I have built my package to work as a single program application or dual program application. In your terminal run: 
-`npm run start:server`
-Program can be accessed through: 
-`http://localhost:3000/`
+### Front end has been built so that this works as a single program application. In your terminal run: 
+```npm run start:server```
+### Program can be accessed through: 
+```http://localhost:3000/```
 
-To run the frontend separately, open a second terminal and run: 
-`ng serve`
-Program can then be accessed through: 
-`http://localhost:4200/`
+
 
 ## Solution
 When reviewing the 5 provided User Stories, it made most sense for me to utilize Angular Materials which provides many functionalities that are not overly complicated to implement while covering all the required cases. All 3 user stories and 2 bonus stories have been covered and incorporated into my solution.
@@ -36,7 +33,7 @@ When reviewing the 5 provided User Stories, it made most sense for me to utilize
 - User Story 5: When filtering Developers, table will dynamically update and total products will also update
 
 ### Front End
-Front end is utilizing Reactive Forms and Observables to observe state change through filtering, adding and editing of products. Data is loaded via from the backend automatically when the page is initialized. RESTful API calls are managed from a service componenent. Adding and Editing are optimisically updated as data changes are sent to the back.
+Front end is utilizing Reactive Forms and Observables to observe state change through filtering, adding and editing of products. Data is loaded via from the backend automatically when the page is initialized. RESTful API calls are managed from a service componenent. Adding and Editing are optimisically updated as data changes are sent to the back. 
 
 ### Back End
 Back end is using NodeJS and ExpressJS to route RESTful API calls. Data is saved to a local JSON file that will read and write with changes made (Adding and Editing) so that these changes persist through page refreshes and application reloads. Whenever put,post or delete requests are made, there will be appropriate response codes sent to the front.
