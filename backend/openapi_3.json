@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Michael Ip IMB Product Catalog API",
-    "description": "This is a Michael Ip's submission for IMB Full Stack Coding Challenge. Thank you for your consideration. To find more example of Michael's work, visit BistroBox.io",
+    "description": "This is a Michael Ip's submission for IMB Full Stack Coding Challenge. Thank you for your consideration. To find more example of Michael's work, visit glbproc.com or BistroBox.io",
     "contact": {
       "email": "michaelip90@hotmail.com"
     },
@@ -30,7 +30,7 @@
         "operationId": "getallproduct",
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "Product List successfully retrieved",
             "content": {
               "application/json": {
                 "schema": {
@@ -43,10 +43,10 @@
             }
           },
           "404": {
-            "description": "product not found"
+            "description": "Could not find product list"
           },
           "500": {
-            "description": "Uncaught error"
+            "description": "Failed to get Product List"
           }
         }
       }
@@ -73,7 +73,7 @@
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "One Product successfully retrieved",
             "content": {
               "application/json": {
                 "schema": {
@@ -83,13 +83,13 @@
             }
           },
           "400": {
-            "description": "Invalid ID supplied"
+            "description": "Invalid ProductID"
           },
           "404": {
-            "description": "product not found"
+            "description": "Could not find product with productId"
           },
           "500": {
-            "description": "Uncaught error"
+            "description": "Failed to get Product List"
           }
         }
       },
@@ -125,10 +125,10 @@
         },
         "responses": {
           "200": {
-            "description": "successful operation"
+            "description": "Successfully saved new productn"
           },
           "400": {
-            "description": "Invalid ID supplied"
+            "description": "Invalid ProductID"
           },
           "409": {
             "description": "ProductID already exists"
@@ -137,7 +137,7 @@
             "description": "Unprocessable content, Body/Param Mismatch"
           },
           "500": {
-            "description": "Uncaught error"
+            "description": "Something went wrong with saving new product"
           }
         }
       },
@@ -173,19 +173,19 @@
         },
         "responses": {
           "200": {
-            "description": "successful operation"
+            "description": "Successfully edited productId"
           },
           "400": {
-            "description": "Invalid ID supplied"
+            "description": "Invalid ProductID"
           },
           "404": {
-            "description": "product not found"
+            "description": "Could not find product with productId"
           },
           "422": {
             "description": "Unprocessable content, Body/Param Mismatch"
           },
           "500": {
-            "description": "Uncaught error"
+            "description": "Something went wrong with saving edit of productId"
           }
         }
       },
@@ -210,16 +210,16 @@
         ],
         "responses": {
           "200": {
-            "description": "successful operation"
+            "description": "Successfully deleted productId"
           },
           "400": {
-            "description": "Invalid product ID value"
+            "description": "Invalid ProductID"
           },
           "404": {
-            "description": "product not found"
+            "description": "Could not find product with productId"
           },
           "500": {
-            "description": "Uncaught error"
+            "description": "Something went wrong with deleting productId"
           }
         }
       }
