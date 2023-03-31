@@ -15,11 +15,30 @@
   ],
   "tags": [
     {
+      "name": "check",
+      "description": "Basic Health Check"
+    },
+    {
       "name": "product",
       "description": "Projects under management by the IMB system"
     }
   ],
   "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "check"
+        ],
+        "summary": "Test endpoint",
+        "description": "Simple API Ping to check if HTTP requests is reaching API",
+        "operationId": "healthCheck",
+        "responses": {
+          "200": {
+            "description": "All systems go. We are healthy"
+          }
+        }
+      }
+    },
     "/products": {
       "get": {
         "tags": [
