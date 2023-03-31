@@ -48,7 +48,7 @@ export class DataTableService {
     next: (response) => console.log(response),
       error: (err) => {
         alert(
-          'Something went wrong with editing a product. Please check logs or try again'
+          'Something went wrong with deleting a product. Please check logs or try again'
         );
         console.log(err);
       },

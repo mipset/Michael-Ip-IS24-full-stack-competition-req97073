@@ -31,12 +31,13 @@ app.use((req, res, next) => {
   next();
 })
 
-app.use("/api/products", productRoutes); //Basic route for /api/products to the express file
+
+app.use('/api/products', productRoutes); //Basic route for /api/products to the express file
 app.use('/api/api-docs', swaggerUi.serve, swaggerUi.setup(openApiDocumentation)); //Route for swagger
+app.use('/api', (req,res,next)=>{res.status(200).json("All systems go. We are healthy");}); //Basic endpoint health check
 app.use((req, res, next) => {
   res.sendFile(path.join(__dirname, "angular", "index.html"));	// if no route is found, send index.html (redirect to homepage)
 });
-
 
 
 
