@@ -34,7 +34,7 @@
           filterTable($event);
           this.filterOptionsForm.get('scrumMasterFilter')?.setValue('')
         " hideSingleSelectionIndicator="true">
-        <ng-container *ngIf="this.filterOptionsForm.value.scrumMasterFilter != ''">
+        <ng-container *ngIf="this.filterOptionsForm.value.developerFilter != ''">
           <mat-option *ngFor="let option of filteredListForDevelopers | async" [value]="option">
             {{ option }}
           </mat-option>

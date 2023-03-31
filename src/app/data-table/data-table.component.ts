@@ -152,16 +152,20 @@ export class DataTableComponent implements OnInit {
     this.developerListFilter(tableData);
   }
   scrumMasterListFilter(tableData: any) {
+    let unfilteredList: string[] = []
     for (let i = 0; i < tableData.length; i++) {
-      this.scrumMasterList.push(tableData[i].scrumMasterName);
+      unfilteredList.push(tableData[i].scrumMasterName);
     }
+    this.scrumMasterList = [...new Set(unfilteredList)]
   }
   developerListFilter(tableData: any) {
+    let unfilteredList: string[] = []
     for (let i = 0; i < tableData.length; i++) {
       for (let x = 0; x < tableData[i].developers.length; x++) {
-        this.developerList.push(tableData[i].developers[x]);
+        unfilteredList.push(tableData[i].developers[x]);
       }
     }
+    this.developerList = [...new Set(unfilteredList)]
   }
 
 
@@ -201,6 +205,7 @@ export class DataTableComponent implements OnInit {
       this.frontendData.unshift(newProductData);
       this.tableData.data = this.frontendData;
       this.productLength = this.tableData.filteredData.length;
+      this.sortFilterLists(this.tableData.filteredData);
     });
   }
 
@@ -315,6 +320,7 @@ export class DataTableComponent implements OnInit {
     product.methodology = this.editProductForm.value.methodology;
     product.developers = parseDevelopers
     this.dataTableService.editProduct(product);
+    this.sortFilterLists(this.tableData.filteredData);
     this.expandedElement = this.expandedElement == product ? null : product;
   }
 
