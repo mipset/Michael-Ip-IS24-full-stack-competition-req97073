@@ -1,5 +1,7 @@
 const fs = require('fs');
 
+// All functions to handle product requests are held here
+
 exports.getProductList = async (req, res, next) => {
   try {
     let productList = JSON.parse(fs.readFileSync('./backend/sampleData.json').toString())

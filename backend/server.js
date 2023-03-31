@@ -2,19 +2,18 @@ const app = require("./app");		 		// initiate app.js file
 const debug = require("debug")("node-angular");
 const http = require("http");
 
+//basic backend server setup
+
 const normalizePort = val => {		// when setting up port, make sure its a valid number
   var port = parseInt(val, 10);
-
   if (isNaN(port)) {
     // named pipe
     return val;
   }
-
   if (port >= 0) {
     // port number
     return port;
   }
-
   return false;
 };
 
