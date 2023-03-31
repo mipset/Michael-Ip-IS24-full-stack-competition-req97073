@@ -7,27 +7,20 @@
 ### Base Setup
 `npm install`
 
-### Angular CLI
-`npm install -g @angular/cli`
-
-### Angular Materials
-`ng add @angular/material`
-
-### Install Nodemon
-`npm install --save-dev nodemon`
-
 ## Run Environment
 ### Front end has been built so that this works as a single program application. In your terminal run: 
 ```npm run start:server```
 ### Program can be accessed through: 
 ```http://localhost:3000/```
+### Documentation can be accessed through:
+```http://localhost:3000/api/api-docs```
 
 
 
 ## Solution
 When reviewing the 5 provided User Stories, it made most sense for me to utilize Angular Materials which provides many functionalities that are not overly complicated to implement while covering all the required cases. All 3 user stories and 2 bonus stories have been covered and incorporated into my solution.
 - User Story 1: All columns fit on the page, titles visible and total number of products provided
-- User Story 2: Adding a new product generates a new ID that will not collide with existing ID. All fields must be answreed to save
+- User Story 2: Adding a new product generates a new ID that will not collide with existing ID. All fields must be answered to save
 - User Story 3: Ability to edit individual product rows and a save button is provided
 - User Story 4: When filtering Scrum Master, table will dynamically update and total products will also update
 - User Story 5: When filtering Developers, table will dynamically update and total products will also update
