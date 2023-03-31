@@ -1,0 +1,73 @@
+.table-container {
+  margin: auto;
+  padding: 75px 175px 75px 175px;
+}
+
+
+td.data-row,
+th {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+.expansion-panel{
+  width:100%;
+  padding: 10px 16px 16px;
+}
+
+.mat-sort-header-container {
+  justify-content: center !important;
+
+}
+
+.tool-bar-styling{
+  background: blue;
+}
+
+tr.example-detail-row {
+  height: 0;
+}
+
+.example-element-detail {
+  overflow: hidden;
+  display: flex;
+
+}
+
+.example-element-row td {
+  border-bottom-width: 0;
+}
+
+mat-form-field.edit-box{
+  margin-left: 2rem;
+  width:14rem
+}
+
+.edit-developer-delete{
+  cursor: pointer;
+}
+
+.button-styling{
+  margin-left: 2rem;
+  margin-bottom: 16px;
+}
+
+.toolbar-styling{
+  margin-bottom: 24px;
+}
+
+.edit-button-position{
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.edit-field-row{
+  margin-bottom:10px;
+  position:relative;
+}
+
+.edit-field-error{
+  margin-left: 30px;
+}

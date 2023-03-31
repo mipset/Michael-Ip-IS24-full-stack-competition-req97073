@@ -1,0 +1,277 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Michael Ip IMB Product Catalog API",
+    "description": "This is a Michael Ip's submission for IMB Full Stack Coding Challenge. Thank you for your consideration. To find more example of Michael's work, visit BistroBox.io",
+    "contact": {
+      "email": "michaelip90@hotmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api"
+    }
+  ],
+  "tags": [
+    {
+      "name": "product",
+      "description": "Projects under management by the IMB system"
+    }
+  ],
+  "paths": {
+    "/products": {
+      "get": {
+        "tags": [
+          "product"
+        ],
+        "summary": "Get a list of all product",
+        "description": "Get a list of product within the system",
+        "operationId": "getallproduct",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "product not found"
+          },
+          "500": {
+            "description": "Uncaught error"
+          }
+        }
+      }
+    },
+    "/products/{productId}": {
+      "get": {
+        "tags": [
+          "product"
+        ],
+        "summary": "Find product by ID",
+        "description": "Returns a single product",
+        "operationId": "getproductById",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "description": "ID of product to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "product not found"
+          },
+          "500": {
+            "description": "Uncaught error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "product"
+        ],
+        "summary": "Add a product by ID",
+        "description": "Add a single product",
+        "operationId": "postProductById",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "description": "ID of product to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Update an existent pet in the store",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "409": {
+            "description": "ProductID already exists"
+          },
+          "422": {
+            "description": "Unprocessable content, Body/Param Mismatch"
+          },
+          "500": {
+            "description": "Uncaught error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "product"
+        ],
+        "summary": "Updates information of product",
+        "description": "",
+        "operationId": "updateProductById",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "description": "ID of product that needs to be updated",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Update an existent product in the store",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "product not found"
+          },
+          "422": {
+            "description": "Unprocessable content, Body/Param Mismatch"
+          },
+          "500": {
+            "description": "Uncaught error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "product"
+        ],
+        "summary": "Deletes a product",
+        "description": "delete a product",
+        "operationId": "deleteproduct",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "description": "product id to delete",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid product ID value"
+          },
+          "404": {
+            "description": "product not found"
+          },
+          "500": {
+            "description": "Uncaught error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Product": {
+        "required": [
+          "productId",
+          "productName",
+          "productOwnerName"
+        ],
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "productName": {
+            "type": "string",
+            "example": "Super Register"
+          },
+          "productOwnerName": {
+            "type": "string",
+            "example": "John Smith"
+          },
+          "developers": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "John Smith"
+            }
+          },
+          "scrumMasterName": {
+            "type": "string",
+            "example": "John Smith"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "date the project started"
+          },
+          "methodolgy": {
+            "type": "string",
+            "enum": [
+              "Waterfall",
+              "Agile"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
